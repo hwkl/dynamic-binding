@@ -1,6 +1,6 @@
 #include <iostream>
+#include <vector>
 #include <string.h>
-#include <cstring>
 
 using namespace std;
 
@@ -11,10 +11,10 @@ using namespace std;
 class Driver {
 private:
 	int driverAge;
-	char driverName[10];
+	string driverName;
 public:
-	Driver(const char* driverName, int driverAge) { this->driverAge = driverAge, strcpy_s(this->driverName, driverName); }
-	const char* getDriverName() const { return driverName; }
+	Driver(const string driverName, int driverAge) { this->driverAge = driverAge, this->driverName = driverName; }
+	const string getDriverName() const { return driverName; }
 	int getDriverAge() const { return driverAge; }
 	virtual int getSalary() const = 0;
 	virtual void showDriverInfo() const = 0;
@@ -26,7 +26,7 @@ private:
 	int bonusMoney;
 
 public:
-	TaxiDriver(const char* driverName, int driverAge, int baseSalary, int bonusMoney) : Driver(driverName, driverAge), baseSalary(baseSalary), bonusMoney(bonusMoney) {}
+	TaxiDriver(const string driverName, int driverAge, int baseSalary, int bonusMoney) : Driver(driverName, driverAge), baseSalary(baseSalary), bonusMoney(bonusMoney) {}
 	// other functions and data members
 
 	virtual int getSalary() const {
@@ -44,7 +44,7 @@ private:
 	int workingHours;
 	int payPerHour;
 public:
-	BusDriver(const char* driverName, int driverAge, int workingHours, int payPerHour) : Driver(driverName, driverAge), workingHours(workingHours), payPerHour(payPerHour) {}
+	BusDriver(const string driverName, int driverAge, int workingHours, int payPerHour) : Driver(driverName, driverAge), workingHours(workingHours), payPerHour(payPerHour) {}
 	virtual int getSalary() const {
 		return workingHours * payPerHour;
 	}
@@ -56,14 +56,15 @@ public:
 
 class DriverList {
 private:
-	Driver* driverList[50];
+	vector<Driver*> driverList;
 	int numDrivers;
 
 public:
 	DriverList() : numDrivers(0) {}
 
 	void addDriver(Driver* driver) {
-		driverList[numDrivers++] = driver;
+		driverList.push_back(driver);
+		numDrivers++;
 	}
 
 	void showAllDriverInfo()  {
@@ -80,17 +81,28 @@ public:
 		cout << "total salary = " << sum << endl;
 	}
 
+	/*
 	~DriverList() {
 		for (int i = 0; i < numDrivers; i++) {
 			delete driverList[i];
 		}
 	}
+	*/
 };
 
 
 
 int main() {
 	
+	DriverList drivers;
+
+
+	Driver* newDriver = new TaxiDriver("Kim", 33, 300, 50);
+	drivers.addDriver(newDriver);
+
+	drivers.showAllDriverInfo();
+
+	/*
 	DriverList drivers;
 	Driver* pNewDriver = NULL;
 
@@ -105,9 +117,9 @@ int main() {
 
 	pNewDriver = new BusDriver("Yoo", 40, 30, 6);
 	drivers.addDriver(pNewDriver);
+	*/
 
-	drivers.showAllDriverInfo();
-	drivers.showTotalSalary();
+
 	
 
 	return 0;
